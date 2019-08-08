@@ -104,6 +104,7 @@ run_quality_checks = DataQualityOperator(
     dag=dag,
     redshift_conn_id="redshift",
     data_quality_query = "SELECT COUNT(*) FROM ",
+    value=1
     tables=["staging_events","staging_songs",
             "songplays","users",
             "songs","artists","time"]
