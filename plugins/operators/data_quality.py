@@ -13,12 +13,14 @@ class DataQualityOperator(BaseOperator):
     def __init__(self,
                  redshift_conn_id="",
                  tables="",
+                 value="",
                  data_quality_query="",
                  *args, **kwargs):
 
         super(DataQualityOperator, self).__init__(*args, **kwargs)
         self.redshift_conn_id = redshift_conn_id
         self.tables = tables
+        self.value = value
         self.data_quality_query = data_quality_query
 
     def execute(self, context):
@@ -29,7 +31,7 @@ class DataQualityOperator(BaseOperator):
         for table in tables:
             quality_query = "{}{}".format(self.data_quality_query, table)
             record = redshift.get_records(quality_query)
-            if ( int(record[0][0]) < 1):
+            if ( int(record[0][0]) < self.value):
                 raise ValueError(f"Data quality check failed in table: {table}")
                 self.log.info(f"Quality checks fail in table: {table}")
             else:
